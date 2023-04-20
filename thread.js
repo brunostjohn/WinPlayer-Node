@@ -9,4 +9,3 @@ async function onUpdate() {
 }
 
 player = new Player(onUpdate);
-console.log(player.GetPosition());
