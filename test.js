@@ -1,19 +1,5 @@
-const Player = require(".");
+const { Worker } = require("worker_threads");
 
-/** @type {import(".").Player} */
-let player;
-
-async function onUpdate(){
-    const update = await player.getUpdate();
-    console.log(update);
-}
-
-player = new Player(onUpdate);
-console.log(player.GetPosition());
-
-/* (async()=>{
-    while(1) await new Promise(r => setTimeout(()=>{
-        console.log(player.GetPosition());
-        r();
-    }, 1 * 1000));
-})(); */
+const thread1 = new Worker("./thread.js");
+// on line 5 a race condition will occur, i aim to fix this bug
+const thread2 = new Worker("./thread.js");

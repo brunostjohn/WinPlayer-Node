@@ -3,9 +3,9 @@
         {
             "name": "Win32",
             "includePath": [
-                "C:\\Users\\Naomi Calabretta\\AppData\\Local\\node-gyp\\Cache\\17.1.0\\**",
-                "${workspaceFolder}/**",
-                "${workspaceFolder}/node_modules/node-addon-api/**"
+                "C:\\Users\\bruno\\AppData\\Local\\node-gyp\\Cache\\18.12.1\\include\\node\\**",
+                "${workspaceFolder}\\**",
+                "${workspaceFolder}\\node_modules\\node-addon-api\\**"
             ],
             "defines": [
                 "_DEBUG",

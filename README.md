@@ -7,16 +7,16 @@ Controlling media playback programmatically is an art. Doing so on Windows is al
 ## Usage
 
 ```js
-	import Player from "winplayer-node";
+const Player = require("winplayer-node");
 
-	let player;
+let player;
 
-	function onUpdate(){
-		const update = player.getUpdate();
-		console.log(update);
-	}
+async function onUpdate() {
+  const update = await player.getUpdate();
+  console.log(update);
+}
 
-	player = new Player(onUpdate);
+player = new Player(onUpdate);
 ```
 
 Consult the [type definitions file](index.d.ts) for all the available methods and return types.
@@ -24,4 +24,3 @@ Consult the [type definitions file](index.d.ts) for all the available methods an
 ## Why not NodeRT?
 
 It is old, it seems unsupported and it does not support VS2022 and Windows 11 SDK. I know I could've forked it but the hard dependency on `nan` is a problem for Electron. I wanted to make this on `napi` to address some of those issues, plus keeping a level of forward-compatibility.
-
