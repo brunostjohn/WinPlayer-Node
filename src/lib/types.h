@@ -6,12 +6,14 @@
 #include <string>
 #include <vector>
 
-struct ArtData {
+struct ArtData
+{
 	std::vector<uint8_t> data;
 	std::vector<std::string> type;
 };
 
-struct Metadata {
+struct Metadata
+{
 	std::string id;
 	std::string title;
 	std::string artist;
@@ -23,7 +25,8 @@ struct Metadata {
 	float length;
 };
 
-struct Capabilities {
+struct Capabilities
+{
 	bool canControl;
 	bool canPlayPause;
 	bool canGoNext;
@@ -31,7 +34,8 @@ struct Capabilities {
 	bool canSeek;
 };
 
-struct Update {
+struct Update
+{
 	std::optional<Metadata> metadata;
 	Capabilities capabilities;
 	std::string status;

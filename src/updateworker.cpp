@@ -2,7 +2,8 @@
 
 #include <chrono>
 
-Napi::Value stringOrUndefined(const Napi::Env &env, std::string value){
+Napi::Value stringOrUndefined(const Napi::Env &env, std::string value)
+{
 	if (value.size() > 0)
 		return Napi::String::New(env, value);
 	return env.Undefined();
@@ -10,18 +11,22 @@ Napi::Value stringOrUndefined(const Napi::Env &env, std::string value){
 
 UpdateWorker::~UpdateWorker() {}
 
-UpdateWorker::UpdateWorker(Player &player, Napi::Promise::Deferred const& promise)
-: Napi::AsyncWorker(getFakeCallback(promise.Env()).Value()), promise(promise) {
+UpdateWorker::UpdateWorker(Player &player, Napi::Promise::Deferred const &promise)
+	: Napi::AsyncWorker(getFakeCallback(promise.Env()).Value()), promise(promise)
+{
 	this->player = &player;
 }
 
-void UpdateWorker::Execute() {
+void UpdateWorker::Execute()
+{
 	this->currentUpdate = this->player->getUpdate().get();
 }
 
-void UpdateWorker::OnOK() {
+void UpdateWorker::OnOK()
+{
 	auto env = promise.Env();
-	if (currentUpdate.has_value()){
+	if (currentUpdate.has_value())
+	{
 		Napi::Object jsUpdate = Napi::Object::New(env);
 
 		jsUpdate.Set("provider", Napi::String::New(env, "WinPlayer"));
@@ -35,13 +40,11 @@ void UpdateWorker::OnOK() {
 		Napi::Object jsPosition = Napi::Object::New(env);
 		jsPosition.Set("howMuch", Napi::Number::New(env, currentUpdate->elapsed));
 		jsPosition.Set("when",
-			Napi::Date::New(
-				env,
-				std::chrono::duration_cast<std::chrono::milliseconds>(
-					std::chrono::system_clock::now().time_since_epoch()
-				).count()
-			)
-		);
+					   Napi::Date::New(
+						   env,
+						   std::chrono::duration_cast<std::chrono::milliseconds>(
+							   std::chrono::system_clock::now().time_since_epoch())
+							   .count()));
 		jsUpdate.Set("elapsed", jsPosition);
 
 		// Capabilities
@@ -55,7 +58,8 @@ void UpdateWorker::OnOK() {
 
 		// Metadata
 		Napi::Object jsMetadata = Napi::Object::New(env);
-		if (currentUpdate->metadata.has_value()){
+		if (currentUpdate->metadata.has_value())
+		{
 			jsMetadata.Set("id", stringOrUndefined(env, currentUpdate->metadata->id));
 			jsMetadata.Set("title", stringOrUndefined(env, currentUpdate->metadata->title));
 			jsMetadata.Set("artist", stringOrUndefined(env, currentUpdate->metadata->artist));
@@ -63,14 +67,16 @@ void UpdateWorker::OnOK() {
 			jsMetadata.Set("albumArtist", stringOrUndefined(env, currentUpdate->metadata->albumArtist));
 			jsMetadata.Set("length", Napi::Number::New(env, currentUpdate->metadata->length));
 
- 			Napi::Array jsArtists = Napi::Array::New(env),
+			Napi::Array jsArtists = Napi::Array::New(env),
 						jsAlbumArtists = Napi::Array::New(env);
-			for (int i = 0; i < currentUpdate->metadata->artists.size(); i++){
+			for (int i = 0; i < currentUpdate->metadata->artists.size(); i++)
+			{
 				auto value = stringOrUndefined(env, currentUpdate->metadata->artists[i]);
 				if (value != env.Undefined())
 					jsArtists.Set(i, value);
 			}
-			for (int i = 0; i < currentUpdate->metadata->albumArtists.size(); i++){
+			for (int i = 0; i < currentUpdate->metadata->albumArtists.size(); i++)
+			{
 				auto value = stringOrUndefined(env, currentUpdate->metadata->albumArtists[i]);
 				if (value != env.Undefined())
 					jsAlbumArtists.Set(i, value);
@@ -78,7 +84,8 @@ void UpdateWorker::OnOK() {
 			jsMetadata.Set("artists", jsArtists);
 			jsMetadata.Set("albumArtists", jsAlbumArtists);
 
- 			if (currentUpdate->metadata->artData.data.size() > 0){
+			if (currentUpdate->metadata->artData.data.size() > 0)
+			{
 				Napi::Object jsArtData = Napi::Object::New(env);
 
 				Napi::Array jsArtType = Napi::Array::New(env, currentUpdate->metadata->artData.type.size());
@@ -91,7 +98,9 @@ void UpdateWorker::OnOK() {
 
 				jsMetadata.Set("artData", jsArtData);
 			}
-		}else{
+		}
+		else
+		{
 			jsMetadata.Set("id", env.Undefined());
 			jsMetadata.Set("title", env.Undefined());
 			jsMetadata.Set("artist", env.Undefined());
